@@ -1,67 +1,30 @@
-//{ Driver Code Starts
-import java.io.*;
-import java.util.*;
-
-class GFG {
-    public static void main(String args[]) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        PrintWriter out = new PrintWriter(System.out);
-        int t = Integer.parseInt(in.readLine());
-        while (t-- > 0) {
-            String s = in.readLine();
-
-            Solution ob = new Solution();
-            out.println(ob.decodeString(s));
-
-            out.println("~");
-        }
-        out.close();
-    }
-}
-// } Driver Code Ends
-
-
-
 class Solution {
     static String decodeString(String s) {
-        // code here
-        Stack<Integer>val=new Stack<>();
-        Stack<Character>stack=new Stack<>();
-        StringBuilder res=new StringBuilder();
-        for(int i=0;i<s.length();){
-            char ch=s.charAt(i);
-            if(ch>='0'&&ch<='9'){
-                StringBuilder str=new StringBuilder();
-                while(ch>='0'&&ch<='9'){
-                    str.append(ch);
-                    i++;
-                    ch=s.charAt(i);
+        Stack<String>strStack=new Stack<>();
+        Stack<Integer>numStack=new Stack<>();
+        StringBuilder currStr= new StringBuilder();
+        int num=0;
+        
+        for (char ch : s.toCharArray()){
+            if(Character.isDigit(ch)){
+                num =num*10 +(ch-'0');
+            }else if(ch=='['){
+                numStack.push(num);
+                strStack.push(currStr.toString());
+                
+                currStr=new StringBuilder();
+                num=0;
+            }else if ( ch==']'){
+                int repeatTimes = numStack.pop();
+                StringBuilder temp =new StringBuilder(strStack.pop());
+                for(int i=0; i<repeatTimes;i++){
+                    temp.append(currStr);
                 }
-                int cnt=Integer.parseInt(str.toString());
-                val.push(cnt);
-            }else if(ch==']'){
-                StringBuilder str=new StringBuilder();
-                while(!stack.isEmpty()&&stack.peek()!='['){
-                    char ch1=stack.pop();
-                    str.append(ch1);
-                }
-                stack.pop();
-                int times=val.pop();
-                str.reverse();
-                for(int j=0;j<times;j++){
-                    for(int k=0;k<str.length();k++){
-                        stack.push(str.charAt(k));
-                    }
-                }
-                i++;
+                currStr=temp;
             }else{
-                stack.push(ch);
-                i++;
+                currStr.append(ch);
             }
         }
-       while (!stack.isEmpty()) {
-            res.append(stack.pop());
-        }
-        return res.reverse().toString();
+        return currStr.toString();
     }
 }
