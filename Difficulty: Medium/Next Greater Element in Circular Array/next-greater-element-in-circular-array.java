@@ -1,23 +1,30 @@
 class Solution {
-    public ArrayList<Integer> nextLargerElement(int[] arr) {
-        // code here
-        Stack<Integer> st = new Stack<>();
-        ArrayList<Integer> res = new ArrayList<>();
+ public ArrayList<Integer> nextGreater(int[] arr) {  
+   
+        if (arr == null || arr.length == 0) return new ArrayList<>();
+
         int n = arr.length;
-        for(int i = (2 * n) - 1; i >= 0; i--) {
-            while(!st.isEmpty() && st.peek() <= arr[i % n]) {
-                st.pop();
+        int[] res = new int[n];
+        Arrays.fill(res, -1);
+
+        Deque<Integer> stack = new ArrayDeque<>(); 
+
+       
+        for (int i = 0; i < 2 * n; i++) {
+            int val = arr[i % n];
+
+            while (!stack.isEmpty() && arr[stack.peek()] < val) {
+                res[stack.pop()] = val;
             }
-            if(i < n) {
-                if(st.isEmpty()) {
-                    res.add(-1);
-                } else {
-                    res.add(st.peek());
-                }
-            }
-            st.push(arr[i % n]);
+
+            
+            if (i < n) stack.push(i);
         }
-        Collections.reverse(res);
-        return res;
+
+        ArrayList<Integer> ans = new ArrayList<>(n);
+        for (int x : res) ans.add(x);
+        return ans;
+    
+
     }
 }
