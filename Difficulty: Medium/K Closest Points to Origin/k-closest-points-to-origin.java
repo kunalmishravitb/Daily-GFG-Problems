@@ -1,59 +1,25 @@
-//{ Driver Code Starts
-import java.util.*;
-
-
-// } Driver Code Ends
-
 class Solution {
-    public int[][] kClosest(int[][] points, int k) {
-        int res[][] = new int[k][2];
-        Arrays.sort(points, (a, b) -> {
-           return (a[0]*a[0] + a[1]*a[1]) - (b[0]*b[0] + b[1]*b[1]); 
-        });
-        
-        int idx=0;
-        while(idx < k) {
-            res[idx] = points[idx];
-            idx++;
-        }
-        
-        return res;
-    }
-}
+    public ArrayList<ArrayList<Integer>> kClosest(int[][] points, int k) {
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        TreeMap<Integer, Integer> map = new TreeMap<>();
 
-
-//{ Driver Code Starts.
-
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        int t = scanner.nextInt();
-
-        while (t-- > 0) {
-            int k = scanner.nextInt();
-            int n = scanner.nextInt();
-            int[][] points = new int[n][2];
-            for (int i = 0; i < n; i++) {
-                points[i][0] = scanner.nextInt();
-                points[i][1] = scanner.nextInt();
-            }
-            Solution solution = new Solution();
-            int[][] ans = solution.kClosest(points, k);
-
-            Arrays.sort(ans, (a, b) -> {
-                if (a[0] != b[0]) {
-                    return Integer.compare(a[0], b[0]);
-                }
-                return Integer.compare(a[1], b[1]);
-            });
-            for (int[] point : ans) {
-                System.out.println(point[0] + " " + point[1]);
-            }
-            System.out.println("~");
+        for (int i = 0; i < points.length; i++) {
+            int x = points[i][0];
+            int y = points[i][1];
+            int val = (x * x) + (y * y);
+            map.put(val, i);
         }
 
-        scanner.close();
+        for (int key : map.keySet()) {
+            if (k <= 0) break;
+            int index = map.get(key);
+            ArrayList<Integer> list = new ArrayList<>();
+            list.add(points[index][0]);
+            list.add(points[index][1]);
+            ans.add(list);
+            k--;
+        }
+
+        return ans;
     }
 }
-// } Driver Code Ends
